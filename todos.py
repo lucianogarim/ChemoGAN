@@ -35,7 +35,18 @@ import diffusion_trainer
 # ====================================================
 # 1) Configuração e Carga de Dados
 # ====================================================
-data_dir = r'C:\Users\lucianogarim\Associacao Antonio Vieira\UNI - Projeto Quimio - General\Projeto Quimioestratigrafia\Dados\Poços_Sapinhoá'
+DEFAULT_DATA_DIR = os.path.join('data', 'Poços_Sapinhoá')
+DRIVE_LINK = 'https://drive.google.com/drive/folders/1HDXEmBbaZ5rQFTpoa7wvtrPyGxjxenpz?usp=drive_link'
+
+# Prioridade: variável de ambiente > pasta local padrão
+data_dir = os.environ.get('CHEMOGAN_DATA_DIR', DEFAULT_DATA_DIR)
+
+if not os.path.isdir(data_dir):
+    raise FileNotFoundError(
+        f"Diretório de dados não encontrado: '{data_dir}'. \
+"
+        f"Defina CHEMOGAN_DATA_DIR com o caminho correto ou baixe os dados em: {DRIVE_LINK}"
+    )
 
 mnemonicos = ['DEPTH','HCAL','DWAL', 'DWCA', 'DWFE', 'DWSI', 'RHOB', 'GR', 'NPHI', 'PE', 'DT',
               'NMRE_FINAL', 'NMRFL_FINAL', 'NMRT_FINAL', 'HFK', 'HTHO', 'HURA','T2LM']
