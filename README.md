@@ -7,7 +7,7 @@ The project contains multiple training pipelines (GAN, diffusion, transformer, a
 
 - **Main entry point:** `todos.py` is the main file and should be run as the primary experiment script.
 - **Current experiment setup:** The experiment is currently configured for **DWSI**.
-- **Dataset access:** The data used in this project is confidential. If you need access, please contact **lucianogarim@gmail.com**.
+- **Dataset access:** Download the shared dataset from Google Drive: https://drive.google.com/drive/folders/1HDXEmBbaZ5rQFTpoa7wvtrPyGxjxenpz?usp=drive_link
 
 ## Project Structure
 
@@ -74,7 +74,17 @@ Recommended (model training):
    pip install -U pip
    pip install torch numpy pandas scikit-learn xgboost matplotlib seaborn tqdm
    ```
+4. Configure your dataset path (recommended):
+   ```bash
+   # Linux/macOS
+   export CHEMOGAN_DATA_DIR="/path/to/Poços_Sapinhoá"
 
+   # Windows PowerShell
+   # $env:CHEMOGAN_DATA_DIR="C:\\path\\to\\Poços_Sapinhoá"
+   ```
+
+   If `CHEMOGAN_DATA_DIR` is not set, the code will look for `data/Poços_Sapinhoá` inside this repository.
+   
 ## Usage
 
 Run the main script:
