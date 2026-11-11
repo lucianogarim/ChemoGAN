@@ -31,8 +31,8 @@ import sys
 # - Diffusion-based synthetic profile generation;
 # - LAS preprocessing and sequence construction;
 # - plotting utilities;
-# - XGBoost regression for the DWSI target profile;
-# - the main experiment script.
+# - XGBoost regression (DWSI or DWCA target) with leakage-safe validation;
+# - the experiment driver and the analysis script.
 MODULES = [
     "gan_lib",
     "gan_trainer",
@@ -42,8 +42,12 @@ MODULES = [
     "transformer_trainer",
     "pre_processamento",
     "plots",
-    "xgb",
-    "Main",
+    "config",
+    "physics",
+    "gen_metrics",
+    "downstream",
+    "run_experiments",
+    "analysis",
 ]
 
 

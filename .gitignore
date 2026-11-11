@@ -1,0 +1,5 @@
+__pycache__/
+results/*/pred/
+results/*/synth_*.npz
+results/selection_*/
+

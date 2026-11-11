@@ -57,6 +57,10 @@ def tv_penalty_btA(y, attr_weights, order, huber_delta):
 
 def nmr_chain_penalty(y_scaled, i_rt, i_re, i_ff):
     """
+    DEPRECATED (revision 1): kept only for backward compatibility. The trainer now uses
+    physics.ConstraintSet.tf_nmr_penalty, which reads the MinMax parameters from the
+    fitted scaler instead of the hard-coded constants below.
+
     Penalize violations of the NMR porosity chain: RT >= RE >= FFL.
 
     This implementation locally reverses MinMax scaling using hardcoded scaler
@@ -242,3 +246,41 @@ def make_discriminator_1d_robust(T, A):
     model.add(layers.Dense(1))
 
     return model
+
+
+# ================================================
+# Revision 1: hard NMR ordering by construction
+# ================================================
+class NMROrderLayer(layers.Layer):
+    """Re-parameterise the NMR channels so that phi_T >= phi_E >= phi_FL holds exactly.
+
+    The generator's raw sigmoid outputs u in [0,1] are used as
+      phi_T  = min_T + range_T * u_T                (physical units)
+      phi_E  = phi_T  * u_E
+      phi_FL = phi_E  * u_FL
+    and mapped back to the MinMax-scaled space. The ordering is therefore guaranteed for
+    every generated sample (hard constraint), while the remaining channels are untouched.
+    """
+
+    def __init__(self, idx_t, idx_e, idx_fl, data_min, data_range, **kw):
+        super().__init__(**kw)
+        self.it, self.ie, self.ifl = int(idx_t), int(idx_e), int(idx_fl)
+        self.mn = [float(data_min[i]) for i in (idx_t, idx_e, idx_fl)]
+        self.rg = [float(data_range[i]) for i in (idx_t, idx_e, idx_fl)]
+
+    def call(self, u):
+        t = self.mn[0] + self.rg[0] * u[..., self.it]
+        e = t * u[..., self.ie]
+        fl = e * u[..., self.ifl]
+        cols = tf.unstack(u, axis=-1)
+        cols[self.it] = (t - self.mn[0]) / self.rg[0]
+        cols[self.ie] = (e - self.mn[1]) / self.rg[1]
+        cols[self.ifl] = (fl - self.mn[2]) / self.rg[2]
+        return tf.stack(cols, axis=-1)
+
+
+def make_generator_ordered(T, A, Z, nmr_idx, data_min, data_range):
+    base = make_generator_1d_constrained(T, A, Z)
+    z = layers.Input(shape=(Z,))
+    out = NMROrderLayer(*nmr_idx, data_min, data_range)(base(z))
+    return keras.Model(z, out, name="G1D_ordered")

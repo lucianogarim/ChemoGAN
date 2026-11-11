@@ -1,0 +1,540 @@
+
+=== Generative fidelity and PVR ===
+ target                                        model  n             PVR        PVR_hard       PVR_soft         PE_diag                  W1                KS           corrMAE    minutes
+  DWCA                     Real windows (reference) --            38.5             4.4           36.6            35.0                  --                --                --         --
+  DWCA                                   ChemoGAN-H  5   1.4 $\pm$ 0.5   0.0 $\pm$ 0.0  1.4 $\pm$ 0.5   4.6 $\pm$ 2.8 0.0153 $\pm$ 0.0023 0.066 $\pm$ 0.007 0.087 $\pm$ 0.005 12 $\pm$ 1
+  DWCA                            Unconstrained GAN  5  99.1 $\pm$ 0.3  97.4 $\pm$ 1.5 47.9 $\pm$ 7.0  38.3 $\pm$ 6.2 0.0163 $\pm$ 0.0018 0.069 $\pm$ 0.008 0.088 $\pm$ 0.009 13 $\pm$ 0
+  DWCA                                   ChemoGAN-P  5  88.0 $\pm$ 9.6  87.8 $\pm$ 9.8  1.6 $\pm$ 0.5   2.6 $\pm$ 1.0 0.0151 $\pm$ 0.0012 0.064 $\pm$ 0.009 0.091 $\pm$ 0.011 12 $\pm$ 0
+  DWCA Unconstrained GAN + volume-matched rejection  5   0.0 $\pm$ 0.0   0.0 $\pm$ 0.0  0.0 $\pm$ 0.0  40.6 $\pm$ 9.5 0.0646 $\pm$ 0.0242 0.251 $\pm$ 0.085 0.199 $\pm$ 0.061 13 $\pm$ 0
+  DWCA                        Transformer-VAE (GMM)  3 33.2 $\pm$ 29.0 30.4 $\pm$ 29.6  3.7 $\pm$ 0.4   9.3 $\pm$ 0.8 0.0133 $\pm$ 0.0032 0.069 $\pm$ 0.018 0.055 $\pm$ 0.013 22 $\pm$ 0
+  DWCA                      Transformer-VAE (prior)  3 73.6 $\pm$ 17.8 71.9 $\pm$ 18.7  6.5 $\pm$ 1.7 22.9 $\pm$ 11.7 0.0177 $\pm$ 0.0023 0.078 $\pm$ 0.006 0.065 $\pm$ 0.002 22 $\pm$ 0
+  DWCA                                         DDPM  3  98.8 $\pm$ 0.7  96.4 $\pm$ 1.9 66.6 $\pm$ 3.0  60.9 $\pm$ 2.9 0.0366 $\pm$ 0.0022 0.176 $\pm$ 0.012 0.046 $\pm$ 0.006 23 $\pm$ 0
+  DWSI                     Real windows (reference) --            38.8             4.4           36.9            32.9                  --                --                --         --
+  DWSI                                   ChemoGAN-H  5   1.9 $\pm$ 0.8   0.0 $\pm$ 0.0  1.9 $\pm$ 0.8   nan $\pm$ nan 0.0161 $\pm$ 0.0006 0.069 $\pm$ 0.005 0.094 $\pm$ 0.011 12 $\pm$ 0
+  DWSI                            Unconstrained GAN  5  97.0 $\pm$ 2.7  93.9 $\pm$ 4.3 46.6 $\pm$ 4.6   nan $\pm$ nan 0.0157 $\pm$ 0.0030 0.068 $\pm$ 0.011 0.098 $\pm$ 0.020 12 $\pm$ 1
+  DWSI                                   ChemoGAN-P  5  93.4 $\pm$ 6.9  93.2 $\pm$ 7.1  2.8 $\pm$ 0.7   nan $\pm$ nan 0.0167 $\pm$ 0.0051 0.073 $\pm$ 0.026 0.093 $\pm$ 0.023 12 $\pm$ 0
+  DWSI Unconstrained GAN + volume-matched rejection  5   0.0 $\pm$ 0.0   0.0 $\pm$ 0.0  0.0 $\pm$ 0.0   nan $\pm$ nan 0.0575 $\pm$ 0.0138 0.226 $\pm$ 0.055 0.173 $\pm$ 0.051 12 $\pm$ 1
+  DWSI                        Transformer-VAE (GMM)  3 60.2 $\pm$ 13.6 56.7 $\pm$ 13.5  5.8 $\pm$ 0.8   nan $\pm$ nan 0.0165 $\pm$ 0.0041 0.080 $\pm$ 0.023 0.041 $\pm$ 0.007 22 $\pm$ 0
+  DWSI                      Transformer-VAE (prior)  3  86.5 $\pm$ 4.2  85.3 $\pm$ 4.5  6.0 $\pm$ 0.5   nan $\pm$ nan 0.0184 $\pm$ 0.0032 0.082 $\pm$ 0.013 0.061 $\pm$ 0.012 22 $\pm$ 0
+  DWSI                                         DDPM  3  98.5 $\pm$ 1.0  96.1 $\pm$ 1.9 66.5 $\pm$ 1.0   nan $\pm$ nan 0.0362 $\pm$ 0.0031 0.178 $\pm$ 0.013 0.043 $\pm$ 0.004 23 $\pm$ 1
+
+=== Downstream (mean over seeds) ===
+well                           7-SPH-3-SPS  9-SPS-77A  9-SPS-97
+target scenario                                                
+DWCA   chemogan+any                 0.5604     0.4988    0.6447
+       chemogan+none                0.5597     0.4961    0.6466
+       chemogan_soft+any            0.5482     0.5301    0.6408
+       ddpm+any                     0.5294     0.5169    0.6233
+       ddpm+none                    0.3243     0.4456    0.5663
+       gan_uncon+any                0.5360     0.5120    0.6259
+       gan_uncon+none               0.5346     0.5256    0.6133
+       gan_uncon_matched+none       0.5146     0.5170    0.6040
+       real                         0.5403     0.5120    0.6255
+       tvae+any                     0.5794     0.5183    0.6391
+       tvae+none                    0.5949     0.5165    0.6394
+       tvae_prior+none              0.5644     0.4685    0.6074
+DWSI   chemogan+any                 0.6808     0.4790    0.5462
+       chemogan+none                0.6837     0.4756    0.5416
+       chemogan_soft+any            0.6628     0.4733    0.5415
+       ddpm+any                     0.6586     0.4762    0.5228
+       ddpm+none                    0.5663     0.4191    0.4881
+       gan_uncon+any                0.6609     0.4672    0.5431
+       gan_uncon+none               0.6628     0.4645    0.5351
+       gan_uncon_matched+none       0.6559     0.4680    0.5115
+       real                         0.6635     0.4710    0.5383
+       tvae+any                     0.6573     0.4956    0.5713
+       tvae+none                    0.6629     0.4994    0.5910
+       tvae_prior+none              0.6440     0.4602    0.5545
+well                           7-SPH-3-SPS  9-SPS-77A  9-SPS-97
+target scenario                                                
+DWCA   chemogan+any                 0.0201    -0.0132    0.0193
+       chemogan+none                0.0194    -0.0159    0.0211
+       chemogan_soft+any            0.0078     0.0181    0.0153
+       ddpm+any                    -0.0110     0.0033   -0.0044
+       ddpm+none                   -0.2161    -0.0680   -0.0615
+       gan_uncon+any               -0.0043     0.0000    0.0005
+       gan_uncon+none              -0.0057     0.0136   -0.0122
+       gan_uncon_matched+none      -0.0258     0.0050   -0.0215
+       real                         0.0000     0.0000    0.0000
+       tvae+any                     0.0390     0.0047    0.0114
+       tvae+none                    0.0544     0.0029    0.0116
+       tvae_prior+none              0.0240    -0.0452   -0.0203
+DWSI   chemogan+any                 0.0172     0.0080    0.0080
+       chemogan+none                0.0202     0.0046    0.0034
+       chemogan_soft+any           -0.0007     0.0023    0.0032
+       ddpm+any                    -0.0055     0.0050   -0.0154
+       ddpm+none                   -0.0978    -0.0521   -0.0501
+       gan_uncon+any               -0.0027    -0.0038    0.0048
+       gan_uncon+none              -0.0007    -0.0064   -0.0032
+       gan_uncon_matched+none      -0.0076    -0.0030   -0.0268
+       real                         0.0000     0.0000    0.0000
+       tvae+any                    -0.0068     0.0243    0.0330
+       tvae+none                   -0.0012     0.0282    0.0528
+       tvae_prior+none             -0.0201    -0.0110    0.0163
+well                           7-SPH-3-SPS  9-SPS-77A  9-SPS-97
+target scenario                                                
+DWCA   chemogan+any                   0.60       0.20      0.80
+       chemogan+none                  0.60       0.20      0.80
+       chemogan_soft+any              1.00       0.80      0.80
+       ddpm+any                       0.33       0.67      0.33
+       ddpm+none                      0.00       0.00      0.00
+       gan_uncon+any                  0.20       0.40      0.40
+       gan_uncon+none                 0.60       0.80      0.60
+       gan_uncon_matched+none         0.20       0.60      0.20
+       real                           0.00       0.00      0.00
+       tvae+any                       1.00       1.00      0.67
+       tvae+none                      1.00       0.67      0.67
+       tvae_prior+none                1.00       0.00      0.33
+DWSI   chemogan+any                   0.80       0.40      0.60
+       chemogan+none                  0.80       0.40      0.40
+       chemogan_soft+any              0.60       0.40      0.80
+       ddpm+any                       0.33       0.67      0.00
+       ddpm+none                      0.00       0.00      0.00
+       gan_uncon+any                  0.00       0.40      0.60
+       gan_uncon+none                 0.40       0.60      0.60
+       gan_uncon_matched+none         0.40       0.60      0.60
+       real                           0.00       0.00      0.00
+       tvae+any                       0.33       1.00      1.00
+       tvae+none                      0.67       1.00      1.00
+       tvae_prior+none                0.33       0.33      0.67
+
+=== Average over wells (dR2) ===
+target  scenario                   
+DWCA    chemogan+any                   0.0087
+        chemogan+any+TSTR             -0.1000
+        chemogan+any@r0.5              0.0143
+        chemogan+any@r2               -0.0005
+        chemogan+none                  0.0082
+        chemogan+none+TSTR            -0.1015
+        chemogan+none@r0.5             0.0140
+        chemogan+none@r2               0.0007
+        chemogan_soft+any              0.0138
+        chemogan_soft+any+TSTR        -0.1938
+        chemogan_soft+any@r0.5         0.0092
+        chemogan_soft+any@r2           0.0200
+        chemogan_soft+none             0.0429
+        chemogan_soft+none+TSTR        0.0019
+        chemogan_soft+none@r0.5        0.0376
+        chemogan_soft+none@r2          0.0495
+        ddpm+any                      -0.0041
+        ddpm+any+TSTR                 -0.7356
+        ddpm+any@r0.5                 -0.0042
+        ddpm+any@r2                   -0.0096
+        ddpm+none                     -0.1152
+        ddpm+none+TSTR                -0.4712
+        ddpm+none@r0.5                -0.0842
+        ddpm+none@r2                  -0.1652
+        gan_uncon+any                 -0.0013
+        gan_uncon+any+TSTR            -0.7411
+        gan_uncon+any@r0.5            -0.0029
+        gan_uncon+any@r2              -0.0020
+        gan_uncon+none                -0.0014
+        gan_uncon+none+TSTR           -0.0977
+        gan_uncon+none@r0.5            0.0074
+        gan_uncon+none@r2             -0.0107
+        gan_uncon_matched+any         -0.0141
+        gan_uncon_matched+any+TSTR    -0.2899
+        gan_uncon_matched+any@r0.5    -0.0094
+        gan_uncon_matched+any@r2      -0.0269
+        gan_uncon_matched+none        -0.0141
+        gan_uncon_matched+none+TSTR   -0.2899
+        gan_uncon_matched+none@r0.5   -0.0094
+        gan_uncon_matched+none@r2     -0.0269
+        real                           0.0000
+        tvae+any                       0.0184
+        tvae+any+TSTR                 -0.0475
+        tvae+any@r0.5                  0.0070
+        tvae+any@r2                    0.0268
+        tvae+none                      0.0230
+        tvae+none+TSTR                -0.0119
+        tvae+none@r0.5                 0.0117
+        tvae+none@r2                   0.0356
+        tvae_prior+any                -0.0000
+        tvae_prior+any+TSTR           -0.2057
+        tvae_prior+any@r0.5           -0.0021
+        tvae_prior+any@r2              0.0074
+        tvae_prior+none               -0.0138
+        tvae_prior+none+TSTR          -0.1526
+        tvae_prior+none@r0.5          -0.0110
+        tvae_prior+none@r2            -0.0231
+DWSI    chemogan+any                   0.0111
+        chemogan+any+TSTR             -0.0874
+        chemogan+any@r0.5              0.0098
+        chemogan+any@r2                0.0066
+        chemogan+none                  0.0094
+        chemogan+none+TSTR            -0.0912
+        chemogan+none@r0.5             0.0128
+        chemogan+none@r2               0.0056
+        chemogan_soft+any              0.0016
+        chemogan_soft+any+TSTR        -0.4332
+        chemogan_soft+any@r0.5         0.0042
+        chemogan_soft+any@r2           0.0018
+        chemogan_soft+none             0.0240
+        chemogan_soft+none+TSTR       -0.0398
+        chemogan_soft+none@r0.5        0.0151
+        chemogan_soft+none@r2          0.0241
+        ddpm+any                      -0.0053
+        ddpm+any+TSTR                 -0.8720
+        ddpm+any@r0.5                 -0.0013
+        ddpm+any@r2                   -0.0075
+        ddpm+none                     -0.0667
+        ddpm+none+TSTR                -0.3298
+        ddpm+none@r0.5                -0.0319
+        ddpm+none@r2                  -0.0899
+        gan_uncon+any                 -0.0005
+        gan_uncon+any+TSTR            -0.3352
+        gan_uncon+any@r0.5             0.0015
+        gan_uncon+any@r2               0.0012
+        gan_uncon+none                -0.0034
+        gan_uncon+none+TSTR           -0.1269
+        gan_uncon+none@r0.5            0.0038
+        gan_uncon+none@r2             -0.0110
+        gan_uncon_matched+any         -0.0125
+        gan_uncon_matched+any+TSTR    -0.2032
+        gan_uncon_matched+any@r0.5    -0.0078
+        gan_uncon_matched+any@r2      -0.0196
+        gan_uncon_matched+none        -0.0125
+        gan_uncon_matched+none+TSTR   -0.2032
+        gan_uncon_matched+none@r0.5   -0.0078
+        gan_uncon_matched+none@r2     -0.0196
+        real                           0.0000
+        tvae+any                       0.0168
+        tvae+any+TSTR                 -0.0773
+        tvae+any@r0.5                  0.0101
+        tvae+any@r2                    0.0112
+        tvae+none                      0.0266
+        tvae+none+TSTR                -0.0177
+        tvae+none@r0.5                 0.0179
+        tvae+none@r2                   0.0291
+        tvae_prior+any                 0.0023
+        tvae_prior+any+TSTR           -0.2590
+        tvae_prior+any@r0.5            0.0022
+        tvae_prior+any@r2              0.0000
+        tvae_prior+none               -0.0049
+        tvae_prior+none+TSTR          -0.0895
+        tvae_prior+none@r0.5          -0.0005
+        tvae_prior+none@r2            -0.0050
+
+=== Pooled paired test over seeds x wells ===
+target               scenario  n_pairs  dR2_mean  dR2_median  frac_positive  wilcoxon_p
+  DWCA           chemogan+any       15    0.0087      0.0213         0.5333      0.4887
+  DWCA          chemogan+none       15    0.0082      0.0222         0.5333      0.4887
+  DWCA      chemogan_soft+any       15    0.0138      0.0101         0.8667      0.0012
+  DWCA     chemogan_soft+none       15    0.0429      0.0482         0.9333      0.0002
+  DWCA               ddpm+any        9   -0.0041     -0.0025         0.4444      0.3594
+  DWCA              ddpm+none        9   -0.1152     -0.0806         0.0000      0.0039
+  DWCA          gan_uncon+any       15   -0.0013     -0.0022         0.3333      0.2293
+  DWCA         gan_uncon+none       15   -0.0014      0.0111         0.6667      1.0000
+  DWCA  gan_uncon_matched+any       15   -0.0141     -0.0078         0.3333      0.4543
+  DWCA gan_uncon_matched+none       15   -0.0141     -0.0078         0.3333      0.4543
+  DWCA               tvae+any        9    0.0184      0.0188         0.8889      0.0273
+  DWCA              tvae+none        9    0.0230      0.0219         0.7778      0.0391
+  DWCA         tvae_prior+any        9   -0.0000     -0.0055         0.4444      1.0000
+  DWCA        tvae_prior+none        9   -0.0138     -0.0040         0.4444      0.4961
+  DWSI           chemogan+any       15    0.0111      0.0100         0.6000      0.2293
+  DWSI          chemogan+none       15    0.0094      0.0107         0.5333      0.3303
+  DWSI      chemogan_soft+any       15    0.0016      0.0010         0.6000      0.7615
+  DWSI     chemogan_soft+none       15    0.0240      0.0204         0.7333      0.0353
+  DWSI               ddpm+any        9   -0.0053     -0.0065         0.3333      0.3008
+  DWSI              ddpm+none        9   -0.0667     -0.0429         0.0000      0.0039
+  DWSI          gan_uncon+any       15   -0.0005     -0.0021         0.3333      0.4212
+  DWSI         gan_uncon+none       15   -0.0034      0.0058         0.5333      0.8040
+  DWSI  gan_uncon_matched+any       15   -0.0125      0.0013         0.5333      0.8469
+  DWSI gan_uncon_matched+none       15   -0.0125      0.0013         0.5333      0.8469
+  DWSI               tvae+any        9    0.0168      0.0218         0.7778      0.0391
+  DWSI              tvae+none        9    0.0266      0.0371         0.8889      0.0273
+  DWSI         tvae_prior+any        9    0.0023     -0.0014         0.4444      1.0000
+  DWSI        tvae_prior+none        9   -0.0049     -0.0087         0.4444      0.4961
+   ALL           chemogan+any       30    0.0099      0.0157         0.5667      0.1642
+   ALL          chemogan+none       30    0.0088      0.0128         0.5333      0.2206
+   ALL      chemogan_soft+any       30    0.0077      0.0057         0.7333      0.0047
+   ALL     chemogan_soft+none       30    0.0334      0.0344         0.8333      0.0000
+   ALL               ddpm+any       18   -0.0047     -0.0044         0.3889      0.1297
+   ALL              ddpm+none       18   -0.0909     -0.0673         0.0000      0.0000
+   ALL          gan_uncon+any       30   -0.0009     -0.0022         0.3333      0.1772
+   ALL         gan_uncon+none       30   -0.0024      0.0085         0.6000      0.7922
+   ALL  gan_uncon_matched+any       30   -0.0133     -0.0016         0.4333      0.3707
+   ALL gan_uncon_matched+none       30   -0.0133     -0.0016         0.4333      0.3707
+   ALL               tvae+any       18    0.0176      0.0204         0.8333      0.0016
+   ALL              tvae+none       18    0.0248      0.0252         0.8333      0.0016
+   ALL         tvae_prior+any       18    0.0011     -0.0035         0.4444      0.9661
+   ALL        tvae_prior+none       18   -0.0094     -0.0064         0.4444      0.3038
+
+=== Spearman correlation between run-level metrics and mean dR2 (raw synthetic, all runs) ===
+  KS        rho=-0.53 p=0.000 n=58
+  W1        rho=-0.54 p=0.000 n=58
+  corrMAE   rho=+0.04 p=0.775 n=58
+  PVR_soft  rho=-0.27 p=0.040 n=58
+  PVR_hard  rho=-0.10 p=0.449 n=58
+
+=== Seed-averaged dR2 with depth-block bootstrap 95% CI ===
+target                    scenario        well     dR2      lo      hi  significant
+  DWCA                chemogan+any 7-SPH-3-SPS  0.0201  0.0045  0.0364         True
+  DWCA                chemogan+any   9-SPS-77A -0.0132 -0.0357  0.0079        False
+  DWCA                chemogan+any    9-SPS-97  0.0193 -0.0155  0.0805        False
+  DWCA           chemogan+any@r0.5 7-SPH-3-SPS  0.0175  0.0041  0.0313         True
+  DWCA           chemogan+any@r0.5   9-SPS-77A  0.0086 -0.0063  0.0225        False
+  DWCA           chemogan+any@r0.5    9-SPS-97  0.0168 -0.0135  0.0591        False
+  DWCA             chemogan+any@r2 7-SPH-3-SPS  0.0224  0.0029  0.0412         True
+  DWCA             chemogan+any@r2   9-SPS-77A -0.0334 -0.0626 -0.0077         True
+  DWCA             chemogan+any@r2    9-SPS-97  0.0096 -0.0333  0.0733        False
+  DWCA               chemogan+none 7-SPH-3-SPS  0.0194  0.0035  0.0362         True
+  DWCA               chemogan+none   9-SPS-77A -0.0159 -0.0393  0.0060        False
+  DWCA               chemogan+none    9-SPS-97  0.0211 -0.0122  0.0842        False
+  DWCA          chemogan+none@r0.5 7-SPH-3-SPS  0.0172  0.0052  0.0304         True
+  DWCA          chemogan+none@r0.5   9-SPS-77A  0.0049 -0.0108  0.0190        False
+  DWCA          chemogan+none@r0.5    9-SPS-97  0.0198 -0.0061  0.0623        False
+  DWCA            chemogan+none@r2 7-SPH-3-SPS  0.0255  0.0058  0.0442         True
+  DWCA            chemogan+none@r2   9-SPS-77A -0.0337 -0.0645 -0.0063         True
+  DWCA            chemogan+none@r2    9-SPS-97  0.0101 -0.0322  0.0734        False
+  DWCA           chemogan_soft+any 7-SPH-3-SPS  0.0078  0.0027  0.0141         True
+  DWCA           chemogan_soft+any   9-SPS-77A  0.0181  0.0078  0.0324         True
+  DWCA           chemogan_soft+any    9-SPS-97  0.0153  0.0049  0.0384         True
+  DWCA      chemogan_soft+any@r0.5 7-SPH-3-SPS  0.0040  0.0008  0.0077         True
+  DWCA      chemogan_soft+any@r0.5   9-SPS-77A  0.0097  0.0043  0.0189         True
+  DWCA      chemogan_soft+any@r0.5    9-SPS-97  0.0140  0.0047  0.0286         True
+  DWCA        chemogan_soft+any@r2 7-SPH-3-SPS  0.0137  0.0065  0.0215         True
+  DWCA        chemogan_soft+any@r2   9-SPS-77A  0.0228  0.0093  0.0413         True
+  DWCA        chemogan_soft+any@r2    9-SPS-97  0.0236  0.0072  0.0561         True
+  DWCA          chemogan_soft+none 7-SPH-3-SPS  0.0514  0.0314  0.0758         True
+  DWCA          chemogan_soft+none   9-SPS-77A  0.0408  0.0164  0.0715         True
+  DWCA          chemogan_soft+none    9-SPS-97  0.0366  0.0046  0.0895         True
+  DWCA     chemogan_soft+none@r0.5 7-SPH-3-SPS  0.0369  0.0234  0.0545         True
+  DWCA     chemogan_soft+none@r0.5   9-SPS-77A  0.0386  0.0187  0.0641         True
+  DWCA     chemogan_soft+none@r0.5    9-SPS-97  0.0372  0.0152  0.0831         True
+  DWCA       chemogan_soft+none@r2 7-SPH-3-SPS  0.0610  0.0364  0.0900         True
+  DWCA       chemogan_soft+none@r2   9-SPS-77A  0.0358  0.0046  0.0716         True
+  DWCA       chemogan_soft+none@r2    9-SPS-97  0.0517  0.0087  0.1198         True
+  DWCA                    ddpm+any 7-SPH-3-SPS -0.0110 -0.0175 -0.0047         True
+  DWCA                    ddpm+any   9-SPS-77A  0.0033 -0.0011  0.0080        False
+  DWCA                    ddpm+any    9-SPS-97 -0.0044 -0.0129  0.0026        False
+  DWCA               ddpm+any@r0.5 7-SPH-3-SPS -0.0112 -0.0180 -0.0049         True
+  DWCA               ddpm+any@r0.5   9-SPS-77A  0.0003 -0.0044  0.0056        False
+  DWCA               ddpm+any@r0.5    9-SPS-97 -0.0018 -0.0166  0.0073        False
+  DWCA                 ddpm+any@r2 7-SPH-3-SPS -0.0205 -0.0297 -0.0131         True
+  DWCA                 ddpm+any@r2   9-SPS-77A -0.0000 -0.0046  0.0049        False
+  DWCA                 ddpm+any@r2    9-SPS-97 -0.0084 -0.0223  0.0010        False
+  DWCA                   ddpm+none 7-SPH-3-SPS -0.2161 -0.2863 -0.1576         True
+  DWCA                   ddpm+none   9-SPS-77A -0.0680 -0.0977 -0.0401         True
+  DWCA                   ddpm+none    9-SPS-97 -0.0615 -0.1120 -0.0334         True
+  DWCA              ddpm+none@r0.5 7-SPH-3-SPS -0.1646 -0.2274 -0.1141         True
+  DWCA              ddpm+none@r0.5   9-SPS-77A -0.0382 -0.0587 -0.0190         True
+  DWCA              ddpm+none@r0.5    9-SPS-97 -0.0499 -0.0920 -0.0314         True
+  DWCA                ddpm+none@r2 7-SPH-3-SPS -0.2931 -0.3838 -0.2180         True
+  DWCA                ddpm+none@r2   9-SPS-77A -0.1100 -0.1482 -0.0751         True
+  DWCA                ddpm+none@r2    9-SPS-97 -0.0927 -0.1687 -0.0501         True
+  DWCA               gan_uncon+any 7-SPH-3-SPS -0.0043 -0.0071 -0.0015         True
+  DWCA               gan_uncon+any   9-SPS-77A  0.0000 -0.0025  0.0034        False
+  DWCA               gan_uncon+any    9-SPS-97  0.0005 -0.0071  0.0057        False
+  DWCA          gan_uncon+any@r0.5 7-SPH-3-SPS -0.0046 -0.0069 -0.0023         True
+  DWCA          gan_uncon+any@r0.5   9-SPS-77A -0.0006 -0.0036  0.0029        False
+  DWCA          gan_uncon+any@r0.5    9-SPS-97 -0.0036 -0.0120  0.0038        False
+  DWCA            gan_uncon+any@r2 7-SPH-3-SPS -0.0034 -0.0064 -0.0005         True
+  DWCA            gan_uncon+any@r2   9-SPS-77A  0.0011 -0.0022  0.0039        False
+  DWCA            gan_uncon+any@r2    9-SPS-97 -0.0036 -0.0125  0.0053        False
+  DWCA              gan_uncon+none 7-SPH-3-SPS -0.0057 -0.0222  0.0119        False
+  DWCA              gan_uncon+none   9-SPS-77A  0.0136 -0.0101  0.0417        False
+  DWCA              gan_uncon+none    9-SPS-97 -0.0122 -0.0499  0.0240        False
+  DWCA         gan_uncon+none@r0.5 7-SPH-3-SPS -0.0037 -0.0161  0.0098        False
+  DWCA         gan_uncon+none@r0.5   9-SPS-77A  0.0203  0.0011  0.0444         True
+  DWCA         gan_uncon+none@r0.5    9-SPS-97  0.0056 -0.0297  0.0459        False
+  DWCA           gan_uncon+none@r2 7-SPH-3-SPS -0.0044 -0.0238  0.0158        False
+  DWCA           gan_uncon+none@r2   9-SPS-77A -0.0005 -0.0268  0.0310        False
+  DWCA           gan_uncon+none@r2    9-SPS-97 -0.0272 -0.0753  0.0166        False
+  DWCA       gan_uncon_matched+any 7-SPH-3-SPS -0.0258 -0.0423 -0.0100         True
+  DWCA       gan_uncon_matched+any   9-SPS-77A  0.0050 -0.0130  0.0253        False
+  DWCA       gan_uncon_matched+any    9-SPS-97 -0.0215 -0.0544  0.0123        False
+  DWCA  gan_uncon_matched+any@r0.5 7-SPH-3-SPS -0.0203 -0.0341 -0.0073         True
+  DWCA  gan_uncon_matched+any@r0.5   9-SPS-77A  0.0044 -0.0106  0.0211        False
+  DWCA  gan_uncon_matched+any@r0.5    9-SPS-97 -0.0123 -0.0386  0.0110        False
+  DWCA    gan_uncon_matched+any@r2 7-SPH-3-SPS -0.0338 -0.0533 -0.0145         True
+  DWCA    gan_uncon_matched+any@r2   9-SPS-77A -0.0078 -0.0296  0.0160        False
+  DWCA    gan_uncon_matched+any@r2    9-SPS-97 -0.0391 -0.0798 -0.0091         True
+  DWCA      gan_uncon_matched+none 7-SPH-3-SPS -0.0258 -0.0423 -0.0100         True
+  DWCA      gan_uncon_matched+none   9-SPS-77A  0.0050 -0.0130  0.0253        False
+  DWCA      gan_uncon_matched+none    9-SPS-97 -0.0215 -0.0544  0.0123        False
+  DWCA gan_uncon_matched+none@r0.5 7-SPH-3-SPS -0.0203 -0.0341 -0.0073         True
+  DWCA gan_uncon_matched+none@r0.5   9-SPS-77A  0.0044 -0.0106  0.0211        False
+  DWCA gan_uncon_matched+none@r0.5    9-SPS-97 -0.0123 -0.0386  0.0110        False
+  DWCA   gan_uncon_matched+none@r2 7-SPH-3-SPS -0.0338 -0.0533 -0.0145         True
+  DWCA   gan_uncon_matched+none@r2   9-SPS-77A -0.0078 -0.0296  0.0160        False
+  DWCA   gan_uncon_matched+none@r2    9-SPS-97 -0.0391 -0.0798 -0.0091         True
+  DWCA                    tvae+any 7-SPH-3-SPS  0.0390  0.0278  0.0508         True
+  DWCA                    tvae+any   9-SPS-77A  0.0047 -0.0142  0.0198        False
+  DWCA                    tvae+any    9-SPS-97  0.0114 -0.0036  0.0243        False
+  DWCA               tvae+any@r0.5 7-SPH-3-SPS  0.0253  0.0162  0.0354         True
+  DWCA               tvae+any@r0.5   9-SPS-77A  0.0010 -0.0123  0.0117        False
+  DWCA               tvae+any@r0.5    9-SPS-97 -0.0053 -0.0238  0.0087        False
+  DWCA                 tvae+any@r2 7-SPH-3-SPS  0.0511  0.0386  0.0651         True
+  DWCA                 tvae+any@r2   9-SPS-77A  0.0103 -0.0123  0.0309        False
+  DWCA                 tvae+any@r2    9-SPS-97  0.0189 -0.0098  0.0344        False
+  DWCA                   tvae+none 7-SPH-3-SPS  0.0544  0.0385  0.0709         True
+  DWCA                   tvae+none   9-SPS-77A  0.0029 -0.0184  0.0196        False
+  DWCA                   tvae+none    9-SPS-97  0.0116 -0.0156  0.0359        False
+  DWCA              tvae+none@r0.5 7-SPH-3-SPS  0.0381  0.0270  0.0500         True
+  DWCA              tvae+none@r0.5   9-SPS-77A -0.0045 -0.0203  0.0097        False
+  DWCA              tvae+none@r0.5    9-SPS-97  0.0013 -0.0154  0.0191        False
+  DWCA                tvae+none@r2 7-SPH-3-SPS  0.0744  0.0550  0.0958         True
+  DWCA                tvae+none@r2   9-SPS-77A  0.0101 -0.0193  0.0359        False
+  DWCA                tvae+none@r2    9-SPS-97  0.0221 -0.0172  0.0464        False
+  DWCA              tvae_prior+any 7-SPH-3-SPS  0.0179  0.0116  0.0262         True
+  DWCA              tvae_prior+any   9-SPS-77A -0.0038 -0.0197  0.0094        False
+  DWCA              tvae_prior+any    9-SPS-97 -0.0140 -0.0511  0.0089        False
+  DWCA         tvae_prior+any@r0.5 7-SPH-3-SPS  0.0087  0.0044  0.0144         True
+  DWCA         tvae_prior+any@r0.5   9-SPS-77A  0.0014 -0.0122  0.0141        False
+  DWCA         tvae_prior+any@r0.5    9-SPS-97 -0.0165 -0.0756  0.0071        False
+  DWCA           tvae_prior+any@r2 7-SPH-3-SPS  0.0306  0.0195  0.0469         True
+  DWCA           tvae_prior+any@r2   9-SPS-77A -0.0075 -0.0277  0.0110        False
+  DWCA           tvae_prior+any@r2    9-SPS-97 -0.0010 -0.0454  0.0184        False
+  DWCA             tvae_prior+none 7-SPH-3-SPS  0.0240  0.0044  0.0485         True
+  DWCA             tvae_prior+none   9-SPS-77A -0.0452 -0.0745 -0.0209         True
+  DWCA             tvae_prior+none    9-SPS-97 -0.0203 -0.0884  0.0090        False
+  DWCA        tvae_prior+none@r0.5 7-SPH-3-SPS  0.0163  0.0007  0.0369         True
+  DWCA        tvae_prior+none@r0.5   9-SPS-77A -0.0297 -0.0541 -0.0091         True
+  DWCA        tvae_prior+none@r0.5    9-SPS-97 -0.0196 -0.1100  0.0186        False
+  DWCA          tvae_prior+none@r2 7-SPH-3-SPS  0.0224 -0.0001  0.0482        False
+  DWCA          tvae_prior+none@r2   9-SPS-77A -0.0648 -0.1024 -0.0291         True
+  DWCA          tvae_prior+none@r2    9-SPS-97 -0.0268 -0.1123  0.0144        False
+  DWSI                chemogan+any 7-SPH-3-SPS  0.0172  0.0018  0.0376         True
+  DWSI                chemogan+any   9-SPS-77A  0.0080 -0.0144  0.0316        False
+  DWSI                chemogan+any    9-SPS-97  0.0080 -0.0247  0.0288        False
+  DWSI           chemogan+any@r0.5 7-SPH-3-SPS  0.0172  0.0062  0.0333         True
+  DWSI           chemogan+any@r0.5   9-SPS-77A  0.0059 -0.0118  0.0225        False
+  DWSI           chemogan+any@r0.5    9-SPS-97  0.0062 -0.0156  0.0203        False
+  DWSI             chemogan+any@r2 7-SPH-3-SPS  0.0188 -0.0019  0.0447        False
+  DWSI             chemogan+any@r2   9-SPS-77A -0.0003 -0.0300  0.0320        False
+  DWSI             chemogan+any@r2    9-SPS-97  0.0014 -0.0493  0.0277        False
+  DWSI               chemogan+none 7-SPH-3-SPS  0.0202  0.0038  0.0416         True
+  DWSI               chemogan+none   9-SPS-77A  0.0046 -0.0186  0.0284        False
+  DWSI               chemogan+none    9-SPS-97  0.0034 -0.0329  0.0297        False
+  DWSI          chemogan+none@r0.5 7-SPH-3-SPS  0.0140  0.0026  0.0277         True
+  DWSI          chemogan+none@r0.5   9-SPS-77A  0.0135 -0.0025  0.0300        False
+  DWSI          chemogan+none@r0.5    9-SPS-97  0.0108 -0.0093  0.0247        False
+  DWSI            chemogan+none@r2 7-SPH-3-SPS  0.0174 -0.0032  0.0425        False
+  DWSI            chemogan+none@r2   9-SPS-77A -0.0037 -0.0332  0.0258        False
+  DWSI            chemogan+none@r2    9-SPS-97  0.0031 -0.0397  0.0286        False
+  DWSI           chemogan_soft+any 7-SPH-3-SPS -0.0007 -0.0066  0.0058        False
+  DWSI           chemogan_soft+any   9-SPS-77A  0.0023 -0.0051  0.0108        False
+  DWSI           chemogan_soft+any    9-SPS-97  0.0032 -0.0063  0.0106        False
+  DWSI      chemogan_soft+any@r0.5 7-SPH-3-SPS  0.0023 -0.0026  0.0071        False
+  DWSI      chemogan_soft+any@r0.5   9-SPS-77A -0.0019 -0.0098  0.0056        False
+  DWSI      chemogan_soft+any@r0.5    9-SPS-97  0.0122 -0.0010  0.0252        False
+  DWSI        chemogan_soft+any@r2 7-SPH-3-SPS -0.0003 -0.0067  0.0072        False
+  DWSI        chemogan_soft+any@r2   9-SPS-77A  0.0058 -0.0054  0.0156        False
+  DWSI        chemogan_soft+any@r2    9-SPS-97 -0.0000 -0.0099  0.0061        False
+  DWSI          chemogan_soft+none 7-SPH-3-SPS  0.0253  0.0103  0.0454         True
+  DWSI          chemogan_soft+none   9-SPS-77A  0.0267  0.0011  0.0512         True
+  DWSI          chemogan_soft+none    9-SPS-97  0.0199 -0.0164  0.0351        False
+  DWSI     chemogan_soft+none@r0.5 7-SPH-3-SPS  0.0188  0.0081  0.0333         True
+  DWSI     chemogan_soft+none@r0.5   9-SPS-77A  0.0182 -0.0013  0.0349        False
+  DWSI     chemogan_soft+none@r0.5    9-SPS-97  0.0082 -0.0283  0.0223        False
+  DWSI       chemogan_soft+none@r2 7-SPH-3-SPS  0.0246  0.0059  0.0471         True
+  DWSI       chemogan_soft+none@r2   9-SPS-77A  0.0319 -0.0027  0.0624        False
+  DWSI       chemogan_soft+none@r2    9-SPS-97  0.0159 -0.0400  0.0330        False
+  DWSI                    ddpm+any 7-SPH-3-SPS -0.0055 -0.0120  0.0025        False
+  DWSI                    ddpm+any   9-SPS-77A  0.0050 -0.0028  0.0149        False
+  DWSI                    ddpm+any    9-SPS-97 -0.0154 -0.0274 -0.0089         True
+  DWSI               ddpm+any@r0.5 7-SPH-3-SPS -0.0024 -0.0086  0.0055        False
+  DWSI               ddpm+any@r0.5   9-SPS-77A  0.0031 -0.0085  0.0132        False
+  DWSI               ddpm+any@r0.5    9-SPS-97 -0.0045 -0.0130 -0.0001         True
+  DWSI                 ddpm+any@r2 7-SPH-3-SPS -0.0152 -0.0237 -0.0056         True
+  DWSI                 ddpm+any@r2   9-SPS-77A  0.0028 -0.0072  0.0163        False
+  DWSI                 ddpm+any@r2    9-SPS-97 -0.0100 -0.0225 -0.0059         True
+  DWSI                   ddpm+none 7-SPH-3-SPS -0.0978 -0.1349 -0.0542         True
+  DWSI                   ddpm+none   9-SPS-77A -0.0521 -0.0899 -0.0141         True
+  DWSI                   ddpm+none    9-SPS-97 -0.0501 -0.0840 -0.0031         True
+  DWSI              ddpm+none@r0.5 7-SPH-3-SPS -0.0590 -0.0854 -0.0274         True
+  DWSI              ddpm+none@r0.5   9-SPS-77A -0.0243 -0.0531  0.0054        False
+  DWSI              ddpm+none@r0.5    9-SPS-97 -0.0125 -0.0358  0.0363        False
+  DWSI                ddpm+none@r2 7-SPH-3-SPS -0.1344 -0.1825 -0.0775         True
+  DWSI                ddpm+none@r2   9-SPS-77A -0.0846 -0.1330 -0.0318         True
+  DWSI                ddpm+none@r2    9-SPS-97 -0.0508 -0.0922  0.0016        False
+  DWSI               gan_uncon+any 7-SPH-3-SPS -0.0027 -0.0075  0.0024        False
+  DWSI               gan_uncon+any   9-SPS-77A -0.0038 -0.0104  0.0028        False
+  DWSI               gan_uncon+any    9-SPS-97  0.0048 -0.0069  0.0135        False
+  DWSI          gan_uncon+any@r0.5 7-SPH-3-SPS  0.0006 -0.0041  0.0055        False
+  DWSI          gan_uncon+any@r0.5   9-SPS-77A -0.0013 -0.0092  0.0068        False
+  DWSI          gan_uncon+any@r0.5    9-SPS-97  0.0052 -0.0025  0.0153        False
+  DWSI            gan_uncon+any@r2 7-SPH-3-SPS  0.0003 -0.0047  0.0057        False
+  DWSI            gan_uncon+any@r2   9-SPS-77A  0.0009 -0.0098  0.0123        False
+  DWSI            gan_uncon+any@r2    9-SPS-97  0.0025 -0.0109  0.0087        False
+  DWSI              gan_uncon+none 7-SPH-3-SPS -0.0007 -0.0159  0.0178        False
+  DWSI              gan_uncon+none   9-SPS-77A -0.0064 -0.0265  0.0138        False
+  DWSI              gan_uncon+none    9-SPS-97 -0.0032 -0.0305  0.0152        False
+  DWSI         gan_uncon+none@r0.5 7-SPH-3-SPS  0.0041 -0.0084  0.0205        False
+  DWSI         gan_uncon+none@r0.5   9-SPS-77A  0.0029 -0.0136  0.0201        False
+  DWSI         gan_uncon+none@r0.5    9-SPS-97  0.0042 -0.0265  0.0274        False
+  DWSI           gan_uncon+none@r2 7-SPH-3-SPS -0.0092 -0.0254  0.0087        False
+  DWSI           gan_uncon+none@r2   9-SPS-77A -0.0127 -0.0390  0.0131        False
+  DWSI           gan_uncon+none@r2    9-SPS-97 -0.0111 -0.0605  0.0239        False
+  DWSI       gan_uncon_matched+any 7-SPH-3-SPS -0.0076 -0.0239  0.0107        False
+  DWSI       gan_uncon_matched+any   9-SPS-77A -0.0030 -0.0285  0.0258        False
+  DWSI       gan_uncon_matched+any    9-SPS-97 -0.0268 -0.0531  0.0087        False
+  DWSI  gan_uncon_matched+any@r0.5 7-SPH-3-SPS -0.0085 -0.0175  0.0025        False
+  DWSI  gan_uncon_matched+any@r0.5   9-SPS-77A -0.0030 -0.0237  0.0217        False
+  DWSI  gan_uncon_matched+any@r0.5    9-SPS-97 -0.0121 -0.0335  0.0152        False
+  DWSI    gan_uncon_matched+any@r2 7-SPH-3-SPS -0.0163 -0.0328  0.0028        False
+  DWSI    gan_uncon_matched+any@r2   9-SPS-77A -0.0140 -0.0453  0.0238        False
+  DWSI    gan_uncon_matched+any@r2    9-SPS-97 -0.0285 -0.0550 -0.0010         True
+  DWSI      gan_uncon_matched+none 7-SPH-3-SPS -0.0076 -0.0239  0.0107        False
+  DWSI      gan_uncon_matched+none   9-SPS-77A -0.0030 -0.0285  0.0258        False
+  DWSI      gan_uncon_matched+none    9-SPS-97 -0.0268 -0.0531  0.0087        False
+  DWSI gan_uncon_matched+none@r0.5 7-SPH-3-SPS -0.0085 -0.0175  0.0025        False
+  DWSI gan_uncon_matched+none@r0.5   9-SPS-77A -0.0030 -0.0237  0.0217        False
+  DWSI gan_uncon_matched+none@r0.5    9-SPS-97 -0.0121 -0.0335  0.0152        False
+  DWSI   gan_uncon_matched+none@r2 7-SPH-3-SPS -0.0163 -0.0328  0.0028        False
+  DWSI   gan_uncon_matched+none@r2   9-SPS-77A -0.0140 -0.0453  0.0238        False
+  DWSI   gan_uncon_matched+none@r2    9-SPS-97 -0.0285 -0.0550 -0.0010         True
+  DWSI                    tvae+any 7-SPH-3-SPS -0.0068 -0.0168  0.0047        False
+  DWSI                    tvae+any   9-SPS-77A  0.0243  0.0086  0.0392         True
+  DWSI                    tvae+any    9-SPS-97  0.0330  0.0039  0.0603         True
+  DWSI               tvae+any@r0.5 7-SPH-3-SPS -0.0045 -0.0148  0.0078        False
+  DWSI               tvae+any@r0.5   9-SPS-77A  0.0162  0.0036  0.0306         True
+  DWSI               tvae+any@r0.5    9-SPS-97  0.0185 -0.0030  0.0369        False
+  DWSI                 tvae+any@r2 7-SPH-3-SPS -0.0091 -0.0237  0.0057        False
+  DWSI                 tvae+any@r2   9-SPS-77A  0.0270  0.0076  0.0474         True
+  DWSI                 tvae+any@r2    9-SPS-97  0.0159 -0.0131  0.0425        False
+  DWSI                   tvae+none 7-SPH-3-SPS -0.0012 -0.0211  0.0204        False
+  DWSI                   tvae+none   9-SPS-77A  0.0282  0.0015  0.0499         True
+  DWSI                   tvae+none    9-SPS-97  0.0528  0.0171  0.0979         True
+  DWSI              tvae+none@r0.5 7-SPH-3-SPS  0.0044 -0.0096  0.0217        False
+  DWSI              tvae+none@r0.5   9-SPS-77A  0.0200  0.0039  0.0331         True
+  DWSI              tvae+none@r0.5    9-SPS-97  0.0292 -0.0054  0.0614        False
+  DWSI                tvae+none@r2 7-SPH-3-SPS -0.0077 -0.0333  0.0196        False
+  DWSI                tvae+none@r2   9-SPS-77A  0.0265 -0.0031  0.0532        False
+  DWSI                tvae+none@r2    9-SPS-97  0.0686  0.0075  0.1370         True
+  DWSI              tvae_prior+any 7-SPH-3-SPS -0.0034 -0.0134  0.0108        False
+  DWSI              tvae_prior+any   9-SPS-77A -0.0062 -0.0222  0.0131        False
+  DWSI              tvae_prior+any    9-SPS-97  0.0165 -0.0024  0.0405        False
+  DWSI         tvae_prior+any@r0.5 7-SPH-3-SPS -0.0013 -0.0093  0.0110        False
+  DWSI         tvae_prior+any@r0.5   9-SPS-77A -0.0027 -0.0148  0.0117        False
+  DWSI         tvae_prior+any@r0.5    9-SPS-97  0.0105 -0.0056  0.0311        False
+  DWSI           tvae_prior+any@r2 7-SPH-3-SPS  0.0003 -0.0113  0.0189        False
+  DWSI           tvae_prior+any@r2   9-SPS-77A -0.0185 -0.0420  0.0056        False
+  DWSI           tvae_prior+any@r2    9-SPS-97  0.0182  0.0012  0.0410         True
+  DWSI             tvae_prior+none 7-SPH-3-SPS -0.0201 -0.0414  0.0121        False
+  DWSI             tvae_prior+none   9-SPS-77A -0.0110 -0.0487  0.0285        False
+  DWSI             tvae_prior+none    9-SPS-97  0.0163 -0.0270  0.0555        False
+  DWSI        tvae_prior+none@r0.5 7-SPH-3-SPS -0.0068 -0.0229  0.0179        False
+  DWSI        tvae_prior+none@r0.5   9-SPS-77A -0.0019 -0.0284  0.0269        False
+  DWSI        tvae_prior+none@r0.5    9-SPS-97  0.0073 -0.0193  0.0309        False
+  DWSI          tvae_prior+none@r2 7-SPH-3-SPS -0.0321 -0.0605  0.0028        False
+  DWSI          tvae_prior+none@r2   9-SPS-77A -0.0190 -0.0609  0.0273        False
+  DWSI          tvae_prior+none@r2    9-SPS-97  0.0360 -0.0335  0.0927        False
+
+=== Seed-ensemble R2 ===
+well                         7-SPH-3-SPS  9-SPS-77A  9-SPS-97
+target scenario                                              
+DWCA   chemogan+any               0.5823     0.5332    0.6796
+       chemogan+any+TSTR          0.5593     0.5014    0.6717
+       chemogan+any@r0.5          0.5710     0.5403    0.6626
+       chemogan+any@r2            0.5962     0.5322    0.6851
+       chemogan+none              0.5818     0.5310    0.6795
+...                                  ...        ...       ...
+DWSI   tvae_prior+any@r2          0.6728     0.4691    0.5669
+       tvae_prior+none            0.6574     0.4788    0.5670
+       tvae_prior+none+TSTR       0.5179     0.4062    0.6073
+       tvae_prior+none@r0.5       0.6672     0.4851    0.5551
+       tvae_prior+none@r2         0.6495     0.4765    0.5929
+
+[114 rows x 3 columns]

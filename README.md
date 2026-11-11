@@ -1,14 +1,51 @@
 # ChemoGAN
 
+> **Revision 1 (Computers & Geosciences, CAGEO-D-26-00775).** The code in this branch is the
+> version used for every result in the revised manuscript. The main changes w.r.t. the first
+> submission are listed in [Revision notes](#revision-1-notes) below.
+
+## Revision 1 notes
+
+| Issue (first submission) | Fix |
+|---|---|
+| PVR looked for `NMRT/NMRE/NMRFL`, data columns are `*_FINAL` -> NMR check silently skipped | single constraint spec in `config.py` / `physics.py`, used by loss, PVR and rejection |
+| PVR used \|r\| >= 0.7, training used tau = 0.5 | tau = 0.5 everywhere (`config.TAU`) |
+| `rmse = sqrt(MAE)`; tables reported MSE as RMSE | `downstream.metrics` computes MAE, RMSE = sqrt(MSE), R2 |
+| XGBoost: random point-level split, early stopping on mixed real+synthetic data, re-tuned per scenario | tuned once per target with GroupKFold over wells, frozen for all scenarios (`downstream.py`) |
+| Isolation Forest also applied to blind wells | blind wells: depth filter + NaN removal only |
+| 7-SPH-8-SPS entered training without a depth filter | only the 21 wells in `config.DEPTH_FILTERS` are used |
+| NMR constants hard-coded in the penalty | taken from the fitted scaler |
+| NMR hierarchy only as a penalty (88-93 % of windows keep an inversion) | two configurations: ChemoGAN-P (`chemogan_soft`, penalties) and ChemoGAN-H (`chemogan`, `gan_lib.NMROrderLayer`, exact) |
+| DDPM sampling drifted out of range | EMA weights + clipped-x0 posterior mean (reference implementation) |
+| DWCA branch / PE-Ca pair commented out | `--target DWCA` activates the PE-DWCA pair automatically |
+| Transformer-VAE sampled N(0, I) with beta = 1e-5 | ex-post GMM sampling (prior sampling also reported) |
+| DDPM trained on [0, 1] data | data mapped to [-1, 1] |
+| single run, no seeds | seeded runs (5 / 3 seeds), bootstrap CIs, `analysis.py` |
+
+Reproduce everything:
+
+```bash
+./run_all.sh               # all experiments, tables and figures (~20 h on 2 CPU cores)
+```
+
+Model names in the code: `chemogan_soft` = ChemoGAN-P, `chemogan` = ChemoGAN-H, `gan_uncon` = unconstrained GAN
+(`gan_uncon_matched` = volume-matched rejection), `tvae` / `tvae_prior`, `ddpm`.
+Summary tables of the revised manuscript are in `results/summary/` and `results/tex/`.
+
+Model selection (epoch budget) used only validation wells: `python pilot_selection.py DWSI chemogan 400 0`.
+
+---
+
+
 ChemoGAN is a research-oriented repository for generating and evaluating synthetic petrophysical well-log profiles using deep-learning models.
 
 The repository includes GAN-, diffusion-, and transformer-based generative workflows, as well as preprocessing, visualization, and XGBoost-based regression utilities. The quick-test workflow focuses on the synthetic generation of petrophysical profiles, and the downstream regression task is configured for the **DWSI** profile.
 
 ## Important Project Notes
 
-* **Main entry point:** `Main.py` is the primary experiment script.
+* **Main entry point:** `run_experiments.py` (revision 1); `Main.py` is a thin wrapper.
 * **Quick smoke test:** `quick_test_example.py` checks whether the required project modules can be imported successfully.
-* **Current regression target:** the XGBoost regression task is configured for **DWSI**.
+* **Regression targets:** **DWSI** and **DWCA** (`--target`).
 * **Data location:** the LAS files are included in the local `wells/` folder.
 
 ## Project Structure
@@ -185,4 +222,4 @@ Depending on the selected workflow, the repository may generate:
 
 ## License
 
-Add a license file, such as MIT or Apache-2.0, to define usage terms.
+To be defined by the authors before the code is archived (Computers & Geosciences requires an open licence, e.g. MIT or Apache-2.0).

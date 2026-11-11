@@ -80,15 +80,24 @@ def filtro_profundidade(dicionario_pocos, filtros):
     dict
         Dictionary of filtered well DataFrames.
     """
+    # Revision 1: wells without a configured interval are dropped (previously they were
+    # silently kept with their full depth range).
+    filtrado = {}
     for nome_poco, (prof_min, prof_max) in filtros.items():
+        if nome_poco not in dicionario_pocos:
+            print(f"Warning: {nome_poco} listed in depth filters but not loaded.")
+            continue
         depth = dicionario_pocos[nome_poco]["DEPTH"]
         indices = (depth > prof_min) & (depth < prof_max)
-        dicionario_pocos[nome_poco] = dicionario_pocos[nome_poco][indices]
+        filtrado[nome_poco] = dicionario_pocos[nome_poco][indices]
+    ignorados = sorted(set(dicionario_pocos) - set(filtros))
+    if ignorados:
+        print(f"Wells without a depth filter (excluded): {ignorados}")
 
-    return dicionario_pocos
+    return filtrado
 
 
-def trata_outliers(dicionario_pocos, logs):
+def trata_outliers(dicionario_pocos, logs, contamination=0.03):
     """
     Remove missing values and filter outliers in each well using Isolation Forest.
 
@@ -108,7 +117,7 @@ def trata_outliers(dicionario_pocos, logs):
         # NaN handling.
         dicionario_pocos[nome_poco].dropna(inplace=True)
 
-        model_IF = IsolationForest(contamination=0.03, random_state=42)
+        model_IF = IsolationForest(contamination=contamination, random_state=42)
         model_IF.fit(dicionario_pocos[nome_poco][logs])
 
         dicionario_pocos[nome_poco]["anomaly"] = model_IF.predict(dicionario_pocos[nome_poco][logs])
@@ -194,7 +203,7 @@ def muda_escala(pocos_concatenados, logs):
     return pocos_concatenados, scaler
 
 
-def cria_sequencias(dicionario_pocos, features, n_steps, scaler):
+def cria_sequencias(dicionario_pocos, features, n_steps, scaler, stride=None, return_groups=False):
     """
     Generate sequential windows while respecting individual well boundaries.
 
@@ -215,6 +224,9 @@ def cria_sequencias(dicionario_pocos, features, n_steps, scaler):
         3D array with shape (n_samples, n_steps, n_features).
     """
     X_lista = []
+    grupos = []
+    if stride is None:
+        stride = max(1, n_steps // 4)  # s = T/4, as described in the manuscript
 
     print(f"Generating sequences for {len(dicionario_pocos)} wells...")
 
@@ -234,12 +246,53 @@ def cria_sequencias(dicionario_pocos, features, n_steps, scaler):
 
         # 4. Create sequences only within this well boundary.
         # The step of 10 is preserved from the original implementation.
-        for i in range(0, tamanho_poco - n_steps + 1, 10):
+        for i in range(0, tamanho_poco - n_steps + 1, stride):
             seq = dados_scaled[i: i + n_steps, :]
             X_lista.append(seq)
+            grupos.append(nome_poco)
 
     # Convert the list of arrays into a single 3D NumPy array.
     X_final = np.array(X_lista)
 
     print(f"Sequences generated successfully. Final shape: {X_final.shape}")
+    if return_groups:
+        return X_final, np.array(grupos)
     return X_final
+
+
+def build_dataset(cfg, target, verbose=True, merge_val=False):
+    """Revision-1 data pipeline with explicit, leakage-safe partitions.
+
+    Returns a dict with:
+      train_wells / val_wells / blind_wells : dict[name -> DataFrame]
+      features, scaler (fitted on train+val wells only), X_train, X_val (windows),
+      g_train (well id per training window).
+    merge_val=True refits on all 18 non-blind wells after model selection.
+
+    Blind wells: depth filter + NaN removal only. The Isolation Forest is applied
+    only to wells used for fitting, so that no test-time cleaning is performed on
+    the blind wells (in the first submission it was also applied to them).
+    """
+    features = cfg.features_for(target)
+    wd = carregamento(cfg.DATA_DIR, cfg.MNEMONICS)
+    wd = filtro_profundidade(wd, cfg.DEPTH_FILTERS)
+    for k in wd:
+        wd[k] = wd[k].dropna().copy()
+    blind = {k: wd.pop(k) for k in cfg.BLIND_WELLS}
+    wd = trata_outliers(wd, features, cfg.ISOLATION_CONTAMINATION)
+    for k in wd:
+        wd[k] = wd[k].drop(columns=['anomaly'])
+    val = {k: wd.pop(k) for k in cfg.VAL_WELLS}
+    fit_all = concatena_pocos({**wd, **val})
+    _, scaler = muda_escala(fit_all, features)
+    if merge_val:
+        # Final runs: generators are refitted on all non-blind wells (train + val).
+        wd = {**wd, **val}
+    X_train, g_train = cria_sequencias(wd, features, cfg.WINDOW_T, scaler, cfg.STRIDE, True)
+    X_val, g_val = cria_sequencias(val, features, cfg.WINDOW_T, scaler, cfg.STRIDE, True)
+    if verbose:
+        print(f"[data] target={target} train wells={len(wd)} val wells={len(val)} blind={len(blind)} "
+              f"| train windows={len(X_train)} val windows={len(X_val)}")
+    return dict(train_wells=wd, val_wells=val, blind_wells=blind, features=features,
+                scaler=scaler, X_train=X_train.astype('float32'), X_val=X_val.astype('float32'),
+                g_train=g_train, g_val=g_val)

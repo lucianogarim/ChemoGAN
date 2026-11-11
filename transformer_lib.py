@@ -208,7 +208,7 @@ class TransformerVAE(keras.Model):
     and a VAE objective composed of reconstruction loss plus a weighted KL term.
     """
 
-    def __init__(self, encoder, decoder, **kwargs):
+    def __init__(self, encoder, decoder, beta=1e-5, **kwargs):
         """
         Initialize the Transformer VAE.
 
@@ -227,6 +227,8 @@ class TransformerVAE(keras.Model):
         self.total_loss_tracker = keras.metrics.Mean(name="total_loss")
         self.reconstruction_loss_tracker = keras.metrics.Mean(name="reconstruction_loss")
         self.kl_loss_tracker = keras.metrics.Mean(name="kl_loss")
+        # Revision 1: beta is a variable so that it can be annealed (KL warm-up).
+        self.beta = tf.Variable(float(beta), trainable=False, dtype=tf.float32)
 
     @property
     def metrics(self):
@@ -279,7 +281,7 @@ class TransformerVAE(keras.Model):
             kl_loss = tf.reduce_mean(tf.reduce_sum(kl_loss, axis=1))
 
             # KL beta weight. A small value prioritizes reconstruction quality.
-            total_loss = reconstruction_loss + 0.00001 * kl_loss
+            total_loss = reconstruction_loss + self.beta * kl_loss
 
         grads = tape.gradient(total_loss, self.trainable_weights)
         self.optimizer.apply_gradients(zip(grads, self.trainable_weights))

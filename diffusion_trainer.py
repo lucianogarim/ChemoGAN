@@ -30,6 +30,8 @@ class DiffusionManager:
             Final beta value for the linear schedule.
         """
         self.model = model
+        self.clip_lo, self.clip_hi = -1.0, 1.0
+        self._predict = tf.function(lambda x, t: self.model([x, t], training=False))
         self.timesteps = timesteps
 
         # Diffusion parameters using a linear schedule.
@@ -119,34 +121,34 @@ class DiffusionManager:
         x = tf.random.normal((num_samples, T, A), dtype=tf.float32)
 
         # Reverse denoising loop.
-        for i in tqdm(reversed(range(0, self.timesteps))):
+        for i in reversed(range(0, self.timesteps)):
             t_vec = tf.ones((num_samples, 1), dtype=tf.float32) * i
 
             # Predict the noise at the current timestep.
-            pred_noise = self.model([x, t_vec], training=False)
+            pred_noise = self._predict(x, t_vec)
 
-            # Retrieve scalar schedule values from NumPy arrays.
-            alpha_t = self.alpha[i]
-            alpha_bar_t = self.alpha_bar[i]
-            beta_t = self.beta[i]
-
-            # Langevin dynamics noise term.
+            # Posterior mean computed from the clipped x0 estimate (Ho et al., 2020, reference
+            # implementation, clip_denoised=True): keeps the reverse process inside the data range.
+            ab = self.alpha_bar[i]
+            ab_prev = self.alpha_bar[i - 1] if i > 0 else 1.0
+            a_t, b_t = self.alpha[i], self.beta[i]
+            x0 = (x - np.sqrt(1.0 - ab) * pred_noise) / np.sqrt(ab)
+            x0 = tf.clip_by_value(x0, self.clip_lo, self.clip_hi)
+            c0 = b_t * np.sqrt(ab_prev) / (1.0 - ab)
+            ct = (1.0 - ab_prev) * np.sqrt(a_t) / (1.0 - ab)
+            mean = c0 * x0 + ct * x
             if i > 0:
-                noise = tf.random.normal(tf.shape(x), dtype=tf.float32)
+                var = b_t * (1.0 - ab_prev) / (1.0 - ab)  # posterior variance beta_tilde
+                x = mean + np.sqrt(var) * tf.random.normal(tf.shape(x), dtype=tf.float32)
             else:
-                noise = 0.0
-
-            # Mathematical coefficients for the reverse diffusion update.
-            term1 = 1 / np.sqrt(alpha_t)
-            term2 = x - (beta_t / np.sqrt(1 - alpha_bar_t)) * pred_noise
-            sigma = np.sqrt(beta_t)
-
-            x = term1 * term2 + sigma * noise
-
-        return x.numpy()
+                x = mean
+        x = x.numpy()
+        if getattr(self, "rescale", False):
+            x = (x + 1.0) / 2.0
+        return x
 
 
-def train_diffusion(X_train, T, A, epochs=100, batch_size=64):
+def train_diffusion(X_train, T, A, epochs=100, batch_size=64, rescale=True, log_every=50):
     """
     Train a 1D diffusion model and return its manager.
 
@@ -176,7 +178,21 @@ def train_diffusion(X_train, T, A, epochs=100, batch_size=64):
     manager = DiffusionManager(unet)
 
     # Build the training dataset.
-    train_ds = tf.data.Dataset.from_tensor_slices(X_train).shuffle(4096).batch(batch_size)
+    # Revision 1: DDPMs assume data on a scale comparable to the N(0, I) prior; the
+    # MinMax [0, 1] windows are mapped to [-1, 1] for training and mapped back after sampling.
+    manager.rescale = rescale
+    Xt = (2.0 * X_train - 1.0) if rescale else X_train
+    train_ds = tf.data.Dataset.from_tensor_slices(Xt.astype("float32")).shuffle(4096).batch(batch_size)
+
+    # Exponential moving average of the weights (decay 0.999), used for sampling as in Ho et al. (2020).
+    ema = diffusion_lib.make_unet_1d(T, A)
+    ema.set_weights(unet.get_weights())
+    ema_decay = 0.999
+
+    @tf.function
+    def ema_update():
+        for w_e, w in zip(ema.weights, unet.weights):
+            w_e.assign(ema_decay * w_e + (1.0 - ema_decay) * w)
 
     print(f"\n===== Starting Diffusion Model Training ({epochs} epochs) =====")
 
@@ -185,9 +201,13 @@ def train_diffusion(X_train, T, A, epochs=100, batch_size=64):
 
         for batch in train_ds:
             loss = manager.train_step(batch, optimizer)
+            ema_update()
             loss_mean.update_state(loss)
 
-        if (epoch + 1) % 5 == 0:
+        if (epoch + 1) % log_every == 0:
             print(f"Epoch {epoch + 1:03d}/{epochs} | Loss: {loss_mean.result():.5f}")
 
+    manager.model = ema
+    manager._predict = tf.function(lambda x, t: ema([x, t], training=False))
+    manager.clip_lo, manager.clip_hi = (-1.0, 1.0) if rescale else (0.0, 1.0)
     return manager

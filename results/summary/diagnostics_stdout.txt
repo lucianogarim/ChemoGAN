@@ -1,0 +1,46 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794365153.017987   10906 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1794365153.061221   10906 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 AVX512_FP16 AVX_VNNI AMX_TILE AMX_INT8 AMX_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794365154.006136   10906 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+Well 8-SPH-10-SPS_BASE.las does not contain the required logs "['T2LM'] not in index"
+Well 7-SPH-2D-SPS_BASE.las does not contain the required logs "['T2LM'] not in index"
+Well 8-SPH-13-SPS_BASE.las does not contain the required logs "['DWAL', 'DWCA', 'DWFE', 'DWSI', 'PE', 'HFK', 'HTHO', 'HURA', 'T2LM'] not in index"
+Well 9-SPS-95-SP_BASE.las does not contain the required logs "['T2LM'] not in index"
+Well 8-SPH-19D-SPS_BASE.las does not contain the required logs "['T2LM'] not in index"
+Well 8-SPH-24D-SPS_BASE.las does not contain the required logs "['PE', 'HFK', 'HTHO', 'HURA', 'T2LM'] not in index"
+Wells without a depth filter (excluded): ['7-SPH-8-SPS_BASE.las']
+Generating sequences for 18 wells...
+Sequences generated successfully. Final shape: (2825, 40, 13)
+Generating sequences for 3 wells...
+Sequences generated successfully. Final shape: (569, 40, 13)
+Well 8-SPH-10-SPS_BASE.las does not contain the required logs "['T2LM'] not in index"
+Well 7-SPH-2D-SPS_BASE.las does not contain the required logs "['T2LM'] not in index"
+Well 8-SPH-13-SPS_BASE.las does not contain the required logs "['DWAL', 'DWCA', 'DWFE', 'DWSI', 'PE', 'HFK', 'HTHO', 'HURA', 'T2LM'] not in index"
+Well 9-SPS-95-SP_BASE.las does not contain the required logs "['T2LM'] not in index"
+Well 8-SPH-19D-SPS_BASE.las does not contain the required logs "['T2LM'] not in index"
+Well 8-SPH-24D-SPS_BASE.las does not contain the required logs "['PE', 'HFK', 'HTHO', 'HURA', 'T2LM'] not in index"
+Wells without a depth filter (excluded): ['7-SPH-8-SPS_BASE.las']
+Generating sequences for 18 wells...
+Sequences generated successfully. Final shape: (2825, 40, 13)
+Generating sequences for 3 wells...
+Sequences generated successfully. Final shape: (569, 40, 13)
+                                   0             1            2            3             4            5
+target                          DWCA          DWCA         DWCA         DWSI          DWSI         DWSI
+well                     7-SPH-3-SPS  9-SPS-77A-SP  9-SPS-97-SP  7-SPH-3-SPS  9-SPS-77A-SP  9-SPS-97-SP
+n                               2695          2073          341         2695          2073          341
+target_mean                   0.2564        0.3119       0.3164       0.1057         0.098       0.0876
+train_mean                    0.2911        0.2911       0.2911       0.1022        0.1022       0.1022
+target_std                    0.0666        0.0404       0.0368       0.0805        0.0469       0.0398
+train_std                     0.0646        0.0646       0.0646       0.0714        0.0714       0.0714
+frac_outside_train_1_99       0.0111        0.0077       0.0176       0.0627        0.0048          0.0
+kNN_dist_real                 0.1149        0.0937        0.095       0.1143        0.0933       0.0946
+kNN_dist_real+syn             0.1077        0.0872       0.0906        0.107        0.0878       0.0921
+coverage_gain_%               6.3147        6.9361        4.595       6.3768        5.8497       2.6915
+MAE_real_hetero               0.0481        0.0251       0.0209       0.0458        0.0329        0.027
+dMAE_hetero                  -0.0041       -0.0017      -0.0013      -0.0032       -0.0018      -0.0015
+MAE_real_other                0.0289        0.0201       0.0163       0.0301         0.023       0.0185
+dMAE_other                    -0.003       -0.0011      -0.0011      -0.0014       -0.0008      -0.0007
+dMAE_target_low              -0.0063       -0.0014      -0.0026      -0.0039       -0.0012      -0.0023
+dMAE_target_high             -0.0026       -0.0031      -0.0039      -0.0028       -0.0025       -0.002

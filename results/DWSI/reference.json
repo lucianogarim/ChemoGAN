@@ -1,0 +1,31 @@
+{
+  "real_reference_pvr": {
+    "nmr": 4.389380530973451,
+    "corr_NPHI_RHOB": 21.5929203539823,
+    "corr_NPHI_DT": 28.56637168141593,
+    "soft": 36.88495575221239,
+    "any": 38.79646017699115,
+    "diag_corr_PE_DWSI": 32.88495575221239
+  },
+  "n_windows": 2825,
+  "train_wells": [
+    "1-SPS-96-SP_BASE.las",
+    "3-SPS-69-SP_BASE.las",
+    "3-SPS-82A-SP_BASE.las",
+    "7-SPH-1-SPS_BASE.las",
+    "7-SPH-14D-SPS_BASE.las",
+    "7-SPH-15D-SPS_BASE.las",
+    "7-SPH-16D-SPS_BASE.las",
+    "7-SPH-17-SPS_BASE.las",
+    "7-SPH-20D-SPS_BASE.las",
+    "7-SPH-22-SPS_BASE.las",
+    "7-SPH-4D-SPS_BASE.las",
+    "7-SPH-5-SPS_BASE.las",
+    "7-SPH-6-SPS_BASE.las",
+    "7-SPH-7D-SPS_BASE.las",
+    "8-SPH-11-SPS_BASE.las",
+    "8-SPH-21D-SPS_BASE.las",
+    "8-SPH-23-SPS_BASE.las",
+    "8-SPH-9-SPS_BASE.las"
+  ]
+}
